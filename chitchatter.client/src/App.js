@@ -1,11 +1,24 @@
 import React from 'react';
-import ChatRoom from './pages/chatroom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ChatRoom, SignIn, SignUp } from './pages';
 
 export default function App() {
   return (
     <>
-      <h1>Hello world</h1>
-      <ChatRoom>Hello World</ChatRoom>
+      <Router>
+        <Route exact path="/">
+          <ChatRoom />
+        </Route>
+        <Route exact path="/signin">
+          <SignIn />
+        </Route>
+        <Route exact path="/signup">
+          <SignUp />
+        </Route>
+        <Route exact path="/chatroom">
+          <ChatRoom />
+        </Route>
+      </Router>
     </>
   );
 }
