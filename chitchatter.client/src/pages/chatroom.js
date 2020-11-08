@@ -66,7 +66,7 @@ export default function ChatRoom({ user }) {
   return (
     <>
       <ChatInput sendMessage={sendMessage} user={user.displayName} activeUsers={activeUsers}></ChatInput>
-      <ChatWindow chat={chat}></ChatWindow>
+      <ChatWindow chat={chat} user={user}></ChatWindow>
     </>
   );
 }
