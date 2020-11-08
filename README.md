@@ -9,4 +9,4 @@ To run the app:
 3.  run 'npm start' in chitchatter.client
 4.  run 'dotnet build' in chitchatter.server
 5.  run 'dotnet run -p chitchatter.server.csproj' in chitchatter.server
-6.  sign up a couple of accounts, run a couple of clients and start chattig
+6.  sign up a couple of accounts, run a couple of clients and start chatting
