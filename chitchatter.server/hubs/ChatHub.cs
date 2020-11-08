@@ -10,6 +10,7 @@ namespace chitchatter.server.hubs
         public async Task SendMessage(ChatMessage message)
         {
             Console.WriteLine("SendMessage");
+            await Clients.All.SendAsync("ReceiveMessage", message);
         }
     }
 }
