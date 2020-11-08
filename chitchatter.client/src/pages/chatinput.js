@@ -16,8 +16,11 @@ export default function ChatInput(props) {
   return (
     <Chat>
       <Chat.BaseForm onSubmit={onSubmit}>
-        <Chat.Label>User:</Chat.Label>
-        <Chat.Label>{props.user}</Chat.Label>
+        <Chat.Label>Active users:</Chat.Label>
+        {Object.keys(props.activeUsers).map(function (key) {
+          return <Chat.Label key={key}>{props.activeUsers[key]}</Chat.Label>;
+        })}
+        <Chat.Label>Current user: {props.user}</Chat.Label>
         <Chat.Label>Message:</Chat.Label>
         <Chat.Input onChange={onMessageUpdate}></Chat.Input>
         <Chat.Submit onClick={props.sendMessage}>SendMessage</Chat.Submit>

@@ -6,6 +6,7 @@ import ChatWindow from './chatwindow';
 export default function ChatRoom({ user }) {
   const [connection, setConnection] = useState(null);
   const [chat, setChat] = useState([]);
+  const [activeUsers, setActiveUsers] = useState({});
   const latestChat = useRef(null);
   latestChat.current = chat;
 
@@ -21,6 +22,11 @@ export default function ChatRoom({ user }) {
         .start()
         .then(() => {
           console.log('Connected!');
+          async function registerUser() {
+            console.log('registerUser sent');
+            await connection.send('RegisterUser', user.displayName);
+          }
+          registerUser();
 
           connection.on('ReceiveMessage', (message) => {
             const updatedChat = [...latestChat.current];
@@ -28,6 +34,12 @@ export default function ChatRoom({ user }) {
             console.log('ReceiveMessage');
 
             setChat(updatedChat);
+          });
+
+          connection.on('ChangeUserStatus', (connections) => {
+            console.log('ChangeUserStatus');
+            setActiveUsers(connections);
+            console.log(connections);
           });
         })
         .catch((e) => console.log('Connection failed: ', e));
@@ -53,7 +65,7 @@ export default function ChatRoom({ user }) {
 
   return (
     <>
-      <ChatInput sendMessage={sendMessage} user={user.displayName}></ChatInput>
+      <ChatInput sendMessage={sendMessage} user={user.displayName} activeUsers={activeUsers}></ChatInput>
       <ChatWindow chat={chat}></ChatWindow>
     </>
   );
