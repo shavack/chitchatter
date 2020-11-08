@@ -5,6 +5,7 @@ export const Panel = styled.div``;
 export const Input = styled.input``;
 export const Submit = styled.button``;
 export const BaseForm = styled.form``;
+export const Title = styled.h1``;
 export const SubTitle = styled.h2``;
 export const MessagePanel = styled.div``;
 export const MessageSender = styled.p``;
