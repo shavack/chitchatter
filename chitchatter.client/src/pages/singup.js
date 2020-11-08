@@ -9,6 +9,7 @@ export default function SignUp() {
   const [nickname, setNickname] = useState('dmnk1');
   const [emailAddress, setEmailAddress] = useState('user1@gmail.com');
   const [password, setPassword] = useState('123456');
+  const [error, setError] = useState('');
   const isInvalid = password === '' || emailAddress === '';
 
   const handleSignup = (event) => {
@@ -25,9 +26,10 @@ export default function SignUp() {
             history.push('./chatroom');
           });
       })
-      .catch(() => {
+      .catch((error) => {
         setEmailAddress('');
         setPassword('');
+        setError(error.message);
       });
   };
   return (
@@ -36,6 +38,7 @@ export default function SignUp() {
         <Form.Base onSubmit={handleSignup} method="POST">
           <Form.Title>Chitchatter</Form.Title>
           <Form.SubTitle>Sign up</Form.SubTitle>
+          {error && <Form.Error color="#ffffff">{error}</Form.Error>}
           <Form.Input placeholder="Nickname" value={nickname} onChange={({ target }) => setNickname(target.value)} />
           <Form.Input placeholder="Email address" value={emailAddress} onChange={({ target }) => setEmailAddress(target.value)} />
           <Form.Input placeholder="Password" autoComplete="off" type="password" value={password} onChange={({ target }) => setPassword(target.value)} />

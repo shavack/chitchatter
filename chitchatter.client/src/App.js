@@ -1,13 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { ChatRoom, SignIn, SignUp } from './pages';
+import AuthenticationHelper from './helpers/authenticationHelper';
 
 export default function App() {
+  const { user } = AuthenticationHelper();
+
   return (
     <>
       <Router>
         <Route exact path="/">
-          <ChatRoom />
+          <SignIn />
         </Route>
         <Route exact path="/signin">
           <SignIn />
@@ -16,7 +19,7 @@ export default function App() {
           <SignUp />
         </Route>
         <Route exact path="/chatroom">
-          <ChatRoom />
+          <ChatRoom user={user} />
         </Route>
       </Router>
     </>

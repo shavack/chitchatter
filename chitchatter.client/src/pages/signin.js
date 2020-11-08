@@ -8,6 +8,8 @@ export default function SignIn() {
   const { firebase } = useContext(FirebaseContext);
   const [emailAddress, setEmailAddress] = useState('user1@gmail.com');
   const [password, setPassword] = useState('123456');
+  const [error, setError] = useState('');
+  const isInvalid = password === '' || emailAddress === '';
 
   const handleSignIn = (event) => {
     event.preventDefault();
@@ -17,9 +19,10 @@ export default function SignIn() {
       .then(() => {
         history.push('./chatroom');
       })
-      .catch(() => {
+      .catch((error) => {
         setEmailAddress('');
         setPassword('');
+        setError(error.message);
       });
   };
 
@@ -29,9 +32,12 @@ export default function SignIn() {
         <Form.Base onSubmit={handleSignIn} method="POST">
           <Form.Title>Chitchatter</Form.Title>
           <Form.SubTitle>Sign in</Form.SubTitle>
+          {error && <Form.Error color="#ffffff">{error}</Form.Error>}
           <Form.Input placeholder="Email address" value={emailAddress} onChange={({ target }) => setEmailAddress(target.value)} />
           <Form.Input placeholder="Password" autoComplete="off" type="password" value={password} onChange={({ target }) => setPassword(target.value)} />
-          <Form.Submit type="submit">Sign in</Form.Submit>
+          <Form.Submit disabled={isInvalid} type="submit">
+            Sign in
+          </Form.Submit>
           <Link to="./signup">Go to sign up</Link>
         </Form.Base>
       </Form>

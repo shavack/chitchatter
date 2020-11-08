@@ -3,7 +3,7 @@ import { HubConnectionBuilder } from '@microsoft/signalr';
 import ChatInput from './chatinput';
 import ChatWindow from './chatwindow';
 
-export default function ChatRoom() {
+export default function ChatRoom({ user }) {
   const [connection, setConnection] = useState(null);
   const [chat, setChat] = useState([]);
   const latestChat = useRef(null);
@@ -53,7 +53,7 @@ export default function ChatRoom() {
 
   return (
     <>
-      <ChatInput sendMessage={sendMessage}></ChatInput>
+      <ChatInput sendMessage={sendMessage} user={user.displayName}></ChatInput>
       <ChatWindow chat={chat}></ChatWindow>
     </>
   );
