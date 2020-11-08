@@ -1,14 +1,10 @@
 import React from 'react';
 
-import { Container, BaseForm, Submit, Input, SubTitle, Panel, MessageItem, MessagePanel, MessageSender, MessageText } from './styles/shared';
+import { Container, BaseForm, Submit, Input, SubTitle, MessageItem, MessagePanel, MessageSender, MessageText } from './styles/shared';
 
 export default function Chat({ children, ...restProps }) {
   return <Container {...restProps}>{children}</Container>;
 }
-
-Chat.Panel = function ChatPanel({ children, ...restProps }) {
-  return <Panel {...restProps}>{children}</Panel>;
-};
 
 Chat.BaseForm = function ChatBaseForm({ children, ...restProps }) {
   return <BaseForm {...restProps}>{children}</BaseForm>;
