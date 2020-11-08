@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using chitchatter.server.hubs;
+
 
 namespace chitchatter.server
 {
@@ -26,6 +28,17 @@ namespace chitchatter.server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSignalR();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ClientPermission", policy =>
+                {
+                    policy.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithOrigins("http://localhost:3000")
+                        .AllowCredentials();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,7 +50,7 @@ namespace chitchatter.server
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("ClientPermission");
             app.UseRouting();
 
             app.UseAuthorization();
@@ -45,6 +58,7 @@ namespace chitchatter.server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/hubs/chat");
             });
         }
     }
