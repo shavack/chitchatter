@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { HubConnectionBuilder } from '@microsoft/signalr';
+import { Chat } from '../components';
 
 export default function ChatRoom() {
   const [connection, setConnection] = useState(null);
@@ -52,12 +53,19 @@ export default function ChatRoom() {
     setMessage(e.target.value);
   };
 
+  const onUserUpdate = (e) => {
+    setUser(e.target.value);
+  };
+
   return (
     <>
-      <form onSubmit={onSubmit}>
-        <input onChange={onMessageUpdate}></input>
-        <button onClick={sendMessage}>SendMessage</button>
-      </form>
+      <Chat.BaseForm onSubmit={onSubmit}>
+        <Chat.Label>User:</Chat.Label>
+        <Chat.Input onChange={onUserUpdate}></Chat.Input>
+        <Chat.Label>Message:</Chat.Label>
+        <Chat.Input onChange={onMessageUpdate}></Chat.Input>
+        <Chat.Submit onClick={sendMessage}>SendMessage</Chat.Submit>
+      </Chat.BaseForm>
     </>
   );
 }
