@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-
 import { Chat } from '../components';
+
 export default function ChatInput(props) {
   const [message, setMessage] = useState('');
   const [user, setUser] = useState('user1');

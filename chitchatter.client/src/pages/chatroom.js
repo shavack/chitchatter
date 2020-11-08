@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import ChatInput from './chatinput';
+import ChatWindow from './chatwindow';
 
 export default function ChatRoom() {
   const [connection, setConnection] = useState(null);
+  const [chat, setChat] = useState([]);
+  const latestChat = useRef(null);
+  latestChat.current = chat;
+
   useEffect(() => {
     const newConnection = new HubConnectionBuilder().withUrl('https://localhost:5001/hubs/chat').withAutomaticReconnect().build();
 
@@ -18,7 +23,11 @@ export default function ChatRoom() {
           console.log('Connected!');
 
           connection.on('ReceiveMessage', (message) => {
-            console.log('ReceiveMessage', message);
+            const updatedChat = [...latestChat.current];
+            updatedChat.push(message);
+            console.log('ReceiveMessage');
+
+            setChat(updatedChat);
           });
         })
         .catch((e) => console.log('Connection failed: ', e));
@@ -45,6 +54,7 @@ export default function ChatRoom() {
   return (
     <>
       <ChatInput sendMessage={sendMessage}></ChatInput>
+      <ChatWindow chat={chat}></ChatWindow>
     </>
   );
 }
