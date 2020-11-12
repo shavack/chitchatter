@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import ChatInput from './chatinput';
 import ChatWindow from './chatwindow';
+import { io } from 'socket.io-client';
 
 export default function ChatRoom({ user }) {
   const [connection, setConnection] = useState(null);
@@ -11,38 +12,36 @@ export default function ChatRoom({ user }) {
   latestChat.current = chat;
 
   useEffect(() => {
-    const newConnection = new HubConnectionBuilder().withUrl('https://localhost:5001/hubs/chat').withAutomaticReconnect().build();
+    //const newConnection = new HubConnectionBuilder().withUrl('https://localhost:5001/hubs/chat').withAutomaticReconnect().build();
+    //setConnection(newConnection);
+    const socket = io.connect('http://localhost:5001/');
 
-    setConnection(newConnection);
+    setConnection(socket);
+    return () => socket.disconnect();
   }, []);
 
   useEffect(() => {
     if (connection) {
-      connection
-        .start()
-        .then(() => {
-          console.log('Connected!');
-          async function registerUser() {
-            console.log('registerUser sent');
-            await connection.send('RegisterUser', user.displayName);
-          }
-          registerUser();
+      console.log('Connected!');
+      async function registerUser() {
+        console.log('registerUser sent');
+        await connection.emit('RegisterUser', user.displayName);
+      }
+      registerUser();
 
-          connection.on('ReceiveMessage', (message) => {
-            const updatedChat = [...latestChat.current];
-            updatedChat.push(message);
-            console.log('ReceiveMessage');
+      connection.on('ReceiveMessage', (message) => {
+        const updatedChat = [...latestChat.current];
+        updatedChat.push(message);
+        console.log('ReceiveMessage');
 
-            setChat(updatedChat);
-          });
+        setChat(updatedChat);
+      });
 
-          connection.on('ChangeUserStatus', (connections) => {
-            console.log('ChangeUserStatus');
-            setActiveUsers(connections);
-            console.log(connections);
-          });
-        })
-        .catch((e) => console.log('Connection failed: ', e));
+      connection.on('ChangeUserStatus', (connections) => {
+        console.log('ChangeUserStatus');
+        setActiveUsers(connections);
+        console.log(connections);
+      });
     }
   }, [connection]);
 
@@ -52,14 +51,15 @@ export default function ChatRoom({ user }) {
       message: message,
     };
 
-    if (connection.connectionStarted) {
+    if (chatMessage.message) {
       try {
-        await connection.send('SendMessage', chatMessage);
+        console.log(chatMessage);
+        await connection.emit('SendMessage', chatMessage);
       } catch (e) {
         console.log(e);
       }
     } else {
-      alert('No connection to server yet.');
+      console.trace();
     }
   };
 

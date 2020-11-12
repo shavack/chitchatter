@@ -10,11 +10,12 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "socket.io": "^3.0.1",
+    "socket.io-client": "^3.0.1",
     "styled-components": "^5.1.1",
     "@microsoft/signalr": "^3.1.8"
   },
   "devDependencies": {
-    "@testing-library/react": "^10.4.9",
     "babel-eslint": "^10.1.0",
     "babel-plugin-macros": "2.8.0",
     "eslint": "^6.8.0",

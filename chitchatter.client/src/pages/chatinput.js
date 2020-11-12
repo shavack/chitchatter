@@ -6,7 +6,7 @@ export default function ChatInput(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    props.sendMessage(props.user, message);
+    if (message) props.sendMessage(props.user, message);
   };
 
   const onMessageUpdate = (e) => {
@@ -23,7 +23,7 @@ export default function ChatInput(props) {
         <Chat.Label>Current user: {props.user}</Chat.Label>
         <Chat.Label>Message:</Chat.Label>
         <Chat.Input onChange={onMessageUpdate}></Chat.Input>
-        <Chat.Submit onClick={props.sendMessage}>SendMessage</Chat.Submit>
+        <Chat.Submit>SendMessage</Chat.Submit>
       </Chat.BaseForm>
     </Chat>
   );

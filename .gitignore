@@ -5,3 +5,5 @@
 /chitchatter.server/obj
 /.vs
 /chitchatter.server/bin/Debug/netcoreapp3.1
+/chitchatter.server.nodejs/node_modules/
+chitchatter.client/src/lib/firebase.js
