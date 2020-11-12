@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using chitchatter.server.hubs;
+using chitchatter.server.interfaces;
+using chitchatter.server.loggers;
 
 
 namespace chitchatter.server
@@ -29,6 +30,7 @@ namespace chitchatter.server
         {
             services.AddControllers();
             services.AddSignalR();
+            services.AddScoped<ILogger, Logger>();
             services.AddCors(options =>
             {
                 options.AddPolicy("ClientPermission", policy =>

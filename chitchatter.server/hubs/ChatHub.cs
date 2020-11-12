@@ -4,16 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using chitchatter.server.models;
+using chitchatter.server.interfaces;
 
 namespace chitchatter.server.hubs
 {
     public class ChatHub : Hub
     {
         static Dictionary<string, string> connections = new Dictionary<string, string>();
+        private ILogger _logger;
 
+        public ChatHub(ILogger logger){
+            this._logger = logger;
+        }
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            Console.WriteLine("OnDisconnectedAsync");
+            this._logger.Log("OnDisconnectedAsync");
 
             var connection = connections.FirstOrDefault(x => x.Key == Context.ConnectionId);
 
@@ -26,6 +31,8 @@ namespace chitchatter.server.hubs
             {
                 Console.WriteLine("Connection = {0}, User = {1}", kvp.Key, kvp.Value);
             }
+            var task = Clients.All.SendAsync("ChangeUserStatus", connections);
+            task.Wait();
 
             return base.OnDisconnectedAsync(exception);
         }
