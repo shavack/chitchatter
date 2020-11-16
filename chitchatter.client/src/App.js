@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { ChatRoom, SignIn, SignUp } from './pages';
-import AuthenticationHelper from './helpers/authenticationHelper';
+import AuthenticationHelperSocket from './helpers/authenticationHelperSocket';
 
 export default function App() {
-  const { user } = AuthenticationHelper();
+  const { _user } = AuthenticationHelperSocket();
 
   return (
     <>
@@ -19,7 +19,7 @@ export default function App() {
           <SignUp />
         </Route>
         <Route exact path="/chatroom">
-          <ChatRoom user={user} />
+          <ChatRoom user={_user} />
         </Route>
       </Router>
     </>

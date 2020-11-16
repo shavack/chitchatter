@@ -35,9 +35,9 @@ io.on('connection', (socket) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(emailAddress, password)
-      .then(() => {
+      .then((result) => {
         console.log('SIGN_IN_SUCCESSFUL');
-        io.to(socket.id).emit('SIGN_IN_SUCCESSFUL');
+        io.to(socket.id).emit('SIGN_IN_SUCCESSFUL', result.user.displayName);
       })
       .catch((error) => {
         console.log(error);
@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
             displayName: nickname,
           })
           .then(() => {
-            io.to(socket.id).emit('SIGN_UP_SUCCESSFUL');
+            io.to(socket.id).emit('SIGN_UP_SUCCESSFUL', nickname);
           });
       })
       .catch((error) => {

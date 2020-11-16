@@ -9,7 +9,7 @@ export default function SignIn() {
   const [password, setPassword] = useState('123456');
   const [error, setError] = useState('');
   const isInvalid = password === '' || emailAddress === '';
-  const connection = useContext(WebSocketContext);
+  const { connection } = useContext(WebSocketContext);
 
   useEffect(() => {
     if (connection) {

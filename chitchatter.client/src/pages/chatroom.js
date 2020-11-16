@@ -5,7 +5,7 @@ import ChatWindow from './chatwindow';
 import { WebSocketContext } from '../context/websocket';
 
 export default function ChatRoom({ user }) {
-  const connection = useContext(WebSocketContext);
+  const { connection } = useContext(WebSocketContext);
   const [chat, setChat] = useState([]);
   const [activeUsers, setActiveUsers] = useState({});
   const latestChat = useRef(null);
@@ -16,7 +16,7 @@ export default function ChatRoom({ user }) {
       console.log('Connected!');
       async function registerUser() {
         console.log('registerUser sent');
-        await connection.emit('RegisterUser', user.displayName);
+        await connection.emit('RegisterUser', user);
       }
       registerUser();
 
@@ -56,7 +56,7 @@ export default function ChatRoom({ user }) {
 
   return (
     <>
-      <ChatInput sendMessage={sendMessage} user={user.displayName} activeUsers={activeUsers}></ChatInput>
+      <ChatInput sendMessage={sendMessage} user={user} activeUsers={activeUsers}></ChatInput>
       <ChatWindow chat={chat} user={user}></ChatWindow>
     </>
   );
