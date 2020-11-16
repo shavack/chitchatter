@@ -1,29 +1,39 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { Form } from '../components';
-import { FirebaseContext } from '../context/firebase';
+import { WebSocketContext } from '../context/websocket';
 
 export default function SignIn() {
   const history = useHistory();
-  const { firebase } = useContext(FirebaseContext);
   const [emailAddress, setEmailAddress] = useState('user1@gmail.com');
   const [password, setPassword] = useState('123456');
   const [error, setError] = useState('');
   const isInvalid = password === '' || emailAddress === '';
+  const connection = useContext(WebSocketContext);
 
-  const handleSignIn = (event) => {
-    event.preventDefault();
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(emailAddress, password)
-      .then(() => {
+  useEffect(() => {
+    if (connection) {
+      connection.on('SIGN_IN_SUCCESSFUL', () => {
+        console.log('SIGN_IN_SUCCESSFUL received');
         history.push('./chatroom');
-      })
-      .catch((error) => {
+      });
+
+      connection.on('SIGN_IN_ERROR', (error) => {
+        console.log('SIGN_IN_ERROR');
         setEmailAddress('');
         setPassword('');
         setError(error.message);
       });
+    }
+  }, [connection]);
+
+  const handleSignIn = (event) => {
+    event.preventDefault();
+
+    async function signIn() {
+      await connection.emit('SignIn', emailAddress, password);
+    }
+    signIn();
   };
 
   return (

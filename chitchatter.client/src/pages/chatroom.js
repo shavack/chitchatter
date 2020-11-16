@@ -1,24 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { HubConnectionBuilder } from '@microsoft/signalr';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+//import { HubConnectionBuilder } from '@microsoft/signalr';
 import ChatInput from './chatinput';
 import ChatWindow from './chatwindow';
-import { io } from 'socket.io-client';
+import { WebSocketContext } from '../context/websocket';
 
 export default function ChatRoom({ user }) {
-  const [connection, setConnection] = useState(null);
+  const connection = useContext(WebSocketContext);
   const [chat, setChat] = useState([]);
   const [activeUsers, setActiveUsers] = useState({});
   const latestChat = useRef(null);
   latestChat.current = chat;
-
-  useEffect(() => {
-    //const newConnection = new HubConnectionBuilder().withUrl('https://localhost:5001/hubs/chat').withAutomaticReconnect().build();
-    //setConnection(newConnection);
-    const socket = io.connect('http://localhost:5001/');
-
-    setConnection(socket);
-    return () => socket.disconnect();
-  }, []);
 
   useEffect(() => {
     if (connection) {
@@ -43,7 +34,7 @@ export default function ChatRoom({ user }) {
         console.log(connections);
       });
     }
-  }, [connection]);
+  }, []);
 
   const sendMessage = async (user, message) => {
     const chatMessage = {

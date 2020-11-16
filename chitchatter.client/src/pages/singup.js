@@ -1,37 +1,43 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { FirebaseContext } from '../context/firebase';
 import { Form } from '../components';
+import { WebSocketContext } from '../context/websocket';
 
 export default function SignUp() {
-  const { firebase } = useContext(FirebaseContext);
   const history = useHistory();
   const [nickname, setNickname] = useState('dmnk1');
   const [emailAddress, setEmailAddress] = useState('user1@gmail.com');
   const [password, setPassword] = useState('123456');
   const [error, setError] = useState('');
   const isInvalid = password === '' || emailAddress === '';
+  const connection = useContext(WebSocketContext);
 
-  const handleSignup = (event) => {
-    event.preventDefault();
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(emailAddress, password)
-      .then((result) => {
-        result.user
-          .updateProfile({
-            displayName: nickname,
-          })
-          .then(() => {
-            history.push('./chatroom');
-          });
-      })
-      .catch((error) => {
+  useEffect(() => {
+    if (connection) {
+      connection.on('SIGN_UP_SUCCESSFUL', () => {
+        console.log('SIGN_UP_SUCCESSFUL');
+        history.push('./chatroom');
+      });
+
+      connection.on('SIGN_UP_ERROR', (error) => {
+        console.log('SIGN_UP_ERROR');
         setEmailAddress('');
         setPassword('');
         setError(error.message);
       });
+    }
+  }, []);
+
+  const handleSignup = (event) => {
+    event.preventDefault();
+    async function signUp() {
+      console.log('signUp sent');
+      console.log(`nickname ${nickname}`);
+      await connection.emit('SignUp', emailAddress, password, nickname);
+    }
+    signUp();
   };
+
   return (
     <>
       <Form>
